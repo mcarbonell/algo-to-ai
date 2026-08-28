@@ -52,6 +52,12 @@ Sigue una metodología de **desarrollo en espiral**:
 
 > **Objetivo:** Comprender la optimización continua como alternativa a la optimización combinatoria clásica, y dominar los fundamentos estadísticos que previenen el sobreajuste.
 
+* **Notebooks del Módulo:**
+  * `[x]` `01_gradient_descent_and_linear_models.ipynb`: Perceptrón, Descenso de Gradiente, Regresión Lineal y Logística.
+  * `[x]` `02_regularization_geometry.ipynb`: Geometría de $L_1$ Lasso vs $L_2$ Ridge & Weight Decay.
+  * `[ ]` `03_decision_trees_to_xgboost.ipynb`: Árboles y Gradient Boosted Trees (XGBoost from scratch).
+  * `[ ]` `04_generalization_and_evaluation.ipynb`: Sesgo-Varianza, PAC Learning y Métricas.
+
 * **1. Contexto Histórico:**
   * El Perceptrón de Rosenblatt (1958) y la prueba de Minsky & Papert (1969) sobre la incapacidad de resolver XOR (el primer invierno de la IA).
   * El auge del Machine Learning estadístico (Vapnik, Breiman, Freund & Schapire en los 90s).

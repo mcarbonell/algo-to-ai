@@ -193,3 +193,46 @@ def test_linear_and_logistic_regression():
     assert np.array_equal(preds, y_log)
 
 
+def test_ridge_and_lasso_regularization():
+    """Valida que Ridge contraiga pesos y Lasso produzca ceros exactos (sparsity)."""
+    np.random.seed(42)
+    m, d = 50, 10
+    X = np.random.randn(m, d)
+    # Solo las 2 primeras variables tienen peso real
+    w_true = np.zeros(d)
+    w_true[0] = 4.0
+    w_true[1] = -2.0
+    y = X @ w_true + np.random.randn(m) * 0.1
+
+    # 1. Ridge
+    I = np.eye(d)
+    w_ridge = np.linalg.solve(X.T @ X + 10.0 * I, X.T @ y)
+    # Ridge no debe poner ceros exactos
+    assert not any(np.isclose(w_ridge[2:], 0.0, atol=1e-6))
+    # Pero los pesos verdaderos deben ser los dominantes
+    assert abs(w_ridge[0]) > abs(w_ridge[2])
+
+    # 2. Lasso con Coordinate Descent y Soft-Thresholding
+    def soft_threshold(rho, lam):
+        if rho > lam:
+            return rho - lam
+        elif rho < -lam:
+            return rho + lam
+        return 0.0
+
+    z = np.sum(X ** 2, axis=0)
+    w_lasso = np.zeros(d)
+    for _ in range(500):
+        for j in range(d):
+            res_j = y - (X @ w_lasso - X[:, j] * w_lasso[j])
+            rho_j = np.dot(X[:, j], res_j)
+            w_lasso[j] = soft_threshold(rho_j, 5.0) / z[j]
+
+    # Lasso debe anular la mayoría de las columnas de ruido a exactamente 0.0
+    num_ceros = np.sum(np.isclose(w_lasso[2:], 0.0, atol=1e-6))
+    assert num_ceros >= 6, f"Se esperaban al menos 6 ceros en las 8 columnas de ruido, obtenidos {num_ceros}"
+    assert w_lasso[0] > 0
+    assert w_lasso[1] < 0
+
+
+

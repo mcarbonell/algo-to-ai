@@ -2,7 +2,7 @@
 
 > **Un viaje desde los primeros principios computacionales y matemáticos hasta la frontera de la Inteligencia Artificial moderna, pensado por y para programadores.**
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-usuario/algo-to-ai/blob/main/notebooks/00_foundations/00_tensor_thinking.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mcarbonell/algo-to-ai/blob/main/notebooks/00_foundations/00_tensor_thinking.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
 
@@ -71,7 +71,7 @@ Cada notebook contiene en la cabecera un botón interactivo `Open in Colab` que 
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/algo-to-ai.git
+   git clone https://github.com/mcarbonell/algo-to-ai.git
    cd algo-to-ai
    ```
 

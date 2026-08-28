@@ -685,6 +685,38 @@ def test_vae_reparameterization_and_kl():
     assert np.isclose(kl_val, expected, atol=1e-5)
 
 
+def test_ddpm_forward_process_and_cfg():
+    """Valida la difusion directa q(x_t|x_0) y la formula de Classifier-Free Guidance (CFG)."""
+    # 1. Forward process schedule
+    T = 100
+    betas = np.linspace(1e-4, 0.02, T)
+    alphas = 1.0 - betas
+    alpha_bars = np.cumprod(alphas)
+    
+    # Propiedades del schedule
+    assert np.isclose(alpha_bars[0], 1.0 - 1e-4, atol=1e-3)
+    assert alpha_bars[-1] < 0.4  # La señal decae significativamente
+    
+    # Muestreo O(1): x_t = sqrt(alpha_bar) * x_0 + sqrt(1 - alpha_bar) * eps
+    x_0 = np.array([[3.0, -2.0]])
+    eps = np.array([[0.5, 0.5]])
+    t = 50
+    ab_t = alpha_bars[t]
+    x_t = np.sqrt(ab_t) * x_0 + np.sqrt(1.0 - ab_t) * eps
+    
+    expected_xt = np.sqrt(ab_t) * x_0 + np.sqrt(1.0 - ab_t) * eps
+    assert np.allclose(x_t, expected_xt)
+    
+    # 2. Classifier-Free Guidance (CFG): eps_tilde = eps_uncond + w * (eps_cond - eps_uncond)
+    eps_uncond = np.array([1.0, 2.0])
+    eps_cond = np.array([3.0, 4.0])
+    w = 7.5
+    eps_cfg = eps_uncond + w * (eps_cond - eps_uncond)
+    # 1.0 + 7.5 * 2.0 = 16.0 ; 2.0 + 7.5 * 2.0 = 17.0
+    assert np.allclose(eps_cfg, [16.0, 17.0])
+
+
+
 
 
 

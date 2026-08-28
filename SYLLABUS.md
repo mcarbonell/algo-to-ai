@@ -16,7 +16,7 @@ Sigue una metodología de **desarrollo en espiral**:
 - [x] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[x]`
 - [x] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[x]`
 - [x] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[x]`
-- [ ] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[ ]`
+- [ ] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[/]`
 - [ ] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[ ]`
 - [ ] [Módulo 07: Sistemas, Inferencia Eficiente y Cuantización](#módulo-07-sistemas-inferencia-eficiente-y-cuantización) `[ ]`
 
@@ -190,6 +190,11 @@ Sigue una metodología de **desarrollo en espiral**:
 ## Módulo 05: Modelos Generativos y Espacios Latentes
 
 > **Objetivo:** Pasar del modelado discriminativo a la modelización de densidades de probabilidad complejas y síntesis de datos en espacios continuos (imágenes, audio, representaciones multimodales).
+
+* **Notebooks del Módulo:**
+  * `[x]` `01_autoencoders_and_vaes.ipynb`: Autoencoders, el truco de reparametrización y la divergencia KL.
+  * `[ ]` `02_diffusion_foundations_ddpm.ipynb`: Modelos de difusión probabilística (DDPM): forward process y reverse process intuitivos.
+  * `[ ]` `03_flow_matching_and_sampling.ipynb`: De difusión discreta a ODEs continuas y Flow Matching moderno.
 
 * **1. Contexto Histórico:**
   * El dilema generativo: estimación de verosimilitud exacta vs aproximaciones.

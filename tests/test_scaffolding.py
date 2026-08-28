@@ -661,6 +661,31 @@ def test_bpe_tokenizer_and_kv_cache():
     assert out_step.shape == (B, H, 1, d_k)
 
 
+def test_vae_reparameterization_and_kl():
+    """Valida el Reparameterization Trick y la formula analitica de la divergencia KL en VAEs."""
+    # 1. Reparameterization Trick: z = mu + exp(0.5 * logvar) * eps
+    mu = np.array([[2.0, -1.0]])
+    logvar = np.array([[0.0, np.log(4.0)]])  # std = [1.0, 2.0]
+    eps = np.array([[0.5, -0.5]])
+    
+    std = np.exp(0.5 * logvar)
+    z = mu + std * eps
+    assert np.allclose(z, [[2.0 + 1.0 * 0.5, -1.0 + 2.0 * (-0.5)]])  # [2.5, -2.0]
+    
+    # 2. Divergencia KL analitica: -0.5 * sum(1 + logvar - mu^2 - exp(logvar))
+    # Para N(0, I), mu=0, logvar=0 -> KL debe ser exactamente 0.0
+    kl_ideal = -0.5 * np.sum(1 + np.zeros(4) - 0.0 - 1.0)
+    assert np.isclose(kl_ideal, 0.0)
+    
+    # Para mu=[1.0], sigma^2=[2.0]: -0.5 * (1 + ln(2) - 1 - 2) = 1 - 0.5*ln(2) = 0.653426
+    mu_test = np.array([1.0])
+    logvar_test = np.array([np.log(2.0)])
+    kl_val = -0.5 * np.sum(1 + logvar_test - mu_test**2 - np.exp(logvar_test))
+    expected = 1.0 - 0.5 * np.log(2.0)
+    assert np.isclose(kl_val, expected, atol=1e-5)
+
+
+
 
 
 

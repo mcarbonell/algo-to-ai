@@ -17,7 +17,7 @@ Sigue una metodología de **desarrollo en espiral**:
 - [x] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[x]`
 - [x] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[x]`
 - [x] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[x]`
-- [ ] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[ ]`
+- [ ] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[/]`
 - [ ] [Módulo 07: Sistemas, Inferencia Eficiente y Cuantización](#módulo-07-sistemas-inferencia-eficiente-y-cuantización) `[ ]`
 
 ---
@@ -220,6 +220,12 @@ Sigue una metodología de **desarrollo en espiral**:
 ## Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM
 
 > **Objetivo:** Aprender cómo un modelo base de lenguaje (un predictor de siguiente token) se transforma en un asistente seguro, alineado con preferencias humanas y capaz de razonamiento deliberativo.
+
+* **Notebooks del Módulo:**
+  * `[x]` `01_supervised_fine_tuning_sft.ipynb`: Formatos de conversación ChatML y enmascaramiento selectivo de pérdida en secuencias.
+  * `[ ]` `02_peft_and_lora_from_scratch.ipynb`: Adaptación de bajo rango (LoRA / QLoRA): formulación matemática e implementación manual.
+  * `[ ]` `03_preference_alignment_dpo.ipynb`: Direct Preference Optimization (DPO) vs pipelines clásicos de RLHF.
+  * `[ ]` `04_reasoning_and_test_time_compute.ipynb`: Dinámica de cadenas de pensamiento (CoT) y búsqueda en tiempo de inferencia.
 
 * **1. Contexto Histórico:**
   * De GPT-3 a InstructGPT (Ouyang et al., 2022): El descubrimiento de que el pre-entrenamiento da conocimiento, pero el post-entrenamiento da usabilidad y alineamiento.

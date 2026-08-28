@@ -742,6 +742,46 @@ def test_flow_matching_optimal_transport_and_euler():
     assert np.allclose(curr_x, x_1)
 
 
+def test_sft_loss_masking():
+    """Valida el enmascaramiento de perdida con ignore_index=-100 en SFT."""
+    # 4 posiciones: 2 tokens de prompt (-100) y 2 tokens de respuesta
+    logits_np = np.array([
+        [2.0, 1.0, 0.1],  # Pos 0: prompt (ignorado)
+        [0.5, 3.0, -1.0], # Pos 1: prompt (ignorado)
+        [1.0, 2.0, 0.0],  # Pos 2: respuesta (token 1)
+        [-1.0, 0.5, 2.5]  # Pos 3: respuesta (token 2)
+    ])
+    targets_np = np.array([-100, -100, 1, 2])
+    
+    # 1. Softmax manual
+    shift = logits_np - np.max(logits_np, axis=-1, keepdims=True)
+    probs = np.exp(shift) / np.sum(np.exp(shift), axis=-1, keepdims=True)
+    
+    # 2. Filtrado con mascara ignore_index=-100
+    valid_mask = (targets_np != -100)
+    valid_targets = targets_np[valid_mask]  # [1, 2]
+    valid_probs = probs[valid_mask]
+    
+    correct_probs = valid_probs[np.arange(len(valid_targets)), valid_targets]
+    manual_loss = -np.mean(np.log(correct_probs))
+    
+    # Comprobar calculo manual:
+    # Pos 2 (target 1): probs[2, 1] = exp(2) / (exp(1) + exp(2) + exp(0))
+    p2 = np.exp(2.0) / (np.exp(1.0) + np.exp(2.0) + np.exp(0.0))
+    # Pos 3 (target 2): probs[3, 2] = exp(2.5) / (exp(-1) + exp(0.5) + exp(2.5))
+    p3 = np.exp(2.5) / (np.exp(-1.0) + np.exp(0.5) + np.exp(2.5))
+    expected_loss = -(np.log(p2) + np.log(p3)) / 2.0
+    
+    assert np.isclose(manual_loss, expected_loss, atol=1e-5)
+    
+    # Gradiente en tokens ignorados debe ser 0.0
+    grad_mock = np.zeros_like(probs)
+    grad_mock[valid_mask] = valid_probs
+    grad_mock[valid_mask, valid_targets] -= 1.0
+    assert np.all(grad_mock[~valid_mask] == 0.0)
+
+
+
 
 
 

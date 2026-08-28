@@ -513,6 +513,32 @@ def test_conv2d_im2col():
     assert out_gemm[0, 0, 0, 1] == 4.0
 
 
+def test_residual_block_gradient_highway():
+    """Valida que la conexion residual actua como una autopista de gradiente matematico."""
+    dim = 8
+    B = 4
+    x = np.random.randn(B, dim)
+    
+    # Bloque con pesos iniciales en cero
+    W1 = np.zeros((dim, dim))
+    W2 = np.zeros((dim, dim))
+    
+    # Forward: y = ReLU(x @ W1) @ W2 + x = 0 + x = x
+    h = np.maximum(0.0, x @ W1)
+    f_x = h @ W2
+    y = f_x + x
+    assert np.allclose(y, x)
+    
+    # Backward: dL/dx = dL/dy @ dF/dx + dL/dy = 0 + dL/dy = dL/dy
+    grad_output = np.ones((B, dim))
+    d_fx = (grad_output @ W2.T) * (h > 0) @ W1.T
+    grad_input = d_fx + grad_output
+    
+    # El gradiente debe pasar exactamente intacto (+I)
+    assert np.allclose(grad_input, grad_output)
+
+
+
 
 
 

@@ -123,7 +123,7 @@ Sigue una metodología de **desarrollo en espiral**:
 
 * **Notebooks del Módulo:**
   * `[x]` `01_convolutions_and_im2col.ipynb`: Convolución 2D matemática vs computacional (`im2col` y GEMM).
-  * `[ ]` `02_resnet_and_gradient_highways.ipynb`: Redes residuales, skip connections y la resolución del gradiente desvaneciente.
+  * `[x]` `02_resnet_and_gradient_highways.ipynb`: Redes residuales, skip connections y la resolución del gradiente desvaneciente.
   * `[ ]` `03_rnns_lstms_and_bottlenecks.ipynb`: Modelado secuencial clásico, BPTT y el límite de paralelización en GPUs.
 
 * **1. Contexto Histórico:**

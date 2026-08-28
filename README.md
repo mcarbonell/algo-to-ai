@@ -43,7 +43,7 @@ El curso se estructura en 8 módulos progresivos. Consulta [SYLLABUS.md](SYLLABU
 | **01** | [Machine Learning Clásico & Optimización](notebooks/01_classical_ml/) | Optimización continua, Regresiones, GBDT (XGBoost) y Teoría de Generalización | ✅ Completado |
 | **02** | [Deep Learning "From Scratch"](notebooks/02_dl_from_scratch/) | Motor Autograd paso a paso, Backpropagation vectorial, Optimizadores y Normalización | ✅ Completado |
 | **03** | [Visión y Secuencias](notebooks/03_vision_and_sequences/) | Convolución 2D (`im2col`), ResNets, Autopistas de gradiente, RNNs/LSTMs y sus límites | ✅ Completado |
-| **04** | [La Revolución del Transformer](notebooks/04_transformers/) | Atención por producto escalar, Multi-Head, RoPE, KV-Cache y NanoGPT completo | 🚀 Siguiente |
+| **04** | [La Revolución del Transformer](notebooks/04_transformers/) | Atención por producto escalar, Multi-Head, RoPE, KV-Cache y NanoGPT completo | 🚀 Activo |
 | **05** | [Modelos Generativos](notebooks/05_generative_models/) | Espacios latentes, Autoencoders, VAEs y Fundamentos de Difusión (DDPM) | 📋 Esqueleto |
 | **06** | [Post-Training & LLM Engineering](notebooks/06_post_training/) | SFT, Fine-tuning eficiente (LoRA / QLoRA), Alineamiento (DPO) y Razonamiento (CoT) | 📋 Esqueleto |
 | **07** | [Sistemas, Eficiencia y Cuantización](notebooks/07_systems_and_efficiency/) | Inferencia local, GGUF/llama.cpp, Cuantización INT4/INT8, FlashAttention y Profiling | 📋 Esqueleto |

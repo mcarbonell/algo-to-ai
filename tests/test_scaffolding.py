@@ -556,6 +556,35 @@ def test_lstm_cell_constant_error_carousel():
     assert np.allclose(h_t, np.tanh(c_prev))
 
 
+def test_scaled_dot_product_attention():
+    """Valida la mecánica de atención por producto escalar y la máscara causal."""
+    B, T, d_k = 2, 4, 8
+    np.random.seed(42)
+    Q = np.random.randn(B, T, d_k)
+    K = np.random.randn(B, T, d_k)
+    V = np.random.randn(B, T, d_k)
+
+    # 1. Sin máscara
+    scores = (Q @ K.swapaxes(-1, -2)) / np.sqrt(d_k)
+    exp_s = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
+    weights = exp_s / np.sum(exp_s, axis=-1, keepdims=True)
+    out = weights @ V
+    assert out.shape == (B, T, d_k)
+    assert np.allclose(np.sum(weights, axis=-1), 1.0)
+
+    # 2. Con máscara causal
+    mask = np.tril(np.ones((T, T), dtype=bool))
+    scores_causal = np.where(mask, scores, -1e9)
+    exp_sc = np.exp(scores_causal - np.max(scores_causal, axis=-1, keepdims=True))
+    weights_causal = exp_sc / np.sum(exp_sc, axis=-1, keepdims=True)
+    
+    # La parte estrictamente superior de weights_causal debe ser exactamente 0
+    for i in range(T):
+        for j in range(i + 1, T):
+            assert np.all(weights_causal[:, i, j] == 0.0)
+
+
+
 
 
 

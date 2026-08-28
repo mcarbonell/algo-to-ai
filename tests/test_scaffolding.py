@@ -584,6 +584,46 @@ def test_scaled_dot_product_attention():
             assert np.all(weights_causal[:, i, j] == 0.0)
 
 
+def test_rope_rotary_position_embedding():
+    """Valida la preservacion de norma e invarianza relativa de Rotary Position Embedding (RoPE)."""
+    dim = 8
+    max_len = 16
+    theta = 10000.0
+    
+    # 1. Precomputar fasores complejos
+    freqs = 1.0 / (theta ** (np.arange(0, dim, 2)[: (dim // 2)] / dim))
+    angles = np.outer(np.arange(max_len), freqs)
+    freqs_cis = np.exp(1j * angles).astype(np.complex64)
+    
+    # Cada fasor debe tener norma unitaria estricta |e^(i*theta)| = 1
+    assert np.allclose(np.abs(freqs_cis), 1.0)
+    
+    # 2. Preservacion de norma euclidiana
+    x = np.random.randn(1, max_len, dim).astype(np.float32)
+    norm_orig = np.linalg.norm(x, axis=-1)
+    
+    # Rotacion compleja
+    x_complex = x.view(np.complex64)
+    x_rot = (x_complex * freqs_cis[np.newaxis, :max_len, :]).view(np.float32)
+    norm_rot = np.linalg.norm(x_rot, axis=-1)
+    assert np.allclose(norm_orig, norm_rot, atol=1e-5)
+    
+    # 3. Invarianza relativa: <R_{m+k} q, R_{n+k} k> == <R_m q, R_n k>
+    q_vec = np.random.randn(dim).astype(np.float32)
+    k_vec = np.random.randn(dim).astype(np.float32)
+    
+    def rotate_at_pos(vec, pos):
+        vc = vec.view(np.complex64)
+        rot = vc * freqs_cis[pos]
+        return rot.view(np.float32)
+        
+    m, n, k = 2, 5, 4
+    dot_base = float(np.dot(rotate_at_pos(q_vec, m), rotate_at_pos(k_vec, n)))
+    dot_shifted = float(np.dot(rotate_at_pos(q_vec, m + k), rotate_at_pos(k_vec, n + k)))
+    assert np.isclose(dot_base, dot_shifted, atol=1e-5)
+
+
+
 
 
 

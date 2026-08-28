@@ -454,6 +454,33 @@ def test_optimizers_adam_and_adamw():
     assert abs(w[0]) < 4.0
 
 
+def test_initialization_and_normalization():
+    """Valida la conservación de varianza de He/Kaiming y las estadísticas de LayerNorm y RMSNorm."""
+    np.random.seed(42)
+    # 1. He/Kaiming init
+    n_in = 1000
+    n_out = 1000
+    W = np.random.randn(n_in, n_out) * np.sqrt(2.0 / n_in)
+    expected_var = 2.0 / n_in
+    actual_var = float(np.var(W))
+    assert np.isclose(actual_var, expected_var, rtol=0.1)
+
+    # 2. LayerNorm
+    X = np.random.randn(10, 50) * 5.0 + 3.0
+    mu = np.mean(X, axis=-1, keepdims=True)
+    var = np.var(X, axis=-1, keepdims=True)
+    X_norm = (X - mu) / np.sqrt(var + 1e-5)
+    assert np.allclose(np.mean(X_norm, axis=-1), 0.0, atol=1e-5)
+    assert np.allclose(np.var(X_norm, axis=-1), 1.0, atol=1e-3)
+
+    # 3. RMSNorm
+    mean_sq = np.mean(X ** 2, axis=-1, keepdims=True)
+    X_rms = X / np.sqrt(mean_sq + 1e-6)
+    rms_val = np.sqrt(np.mean(X_rms ** 2, axis=-1))
+    assert np.allclose(rms_val, 1.0, atol=1e-3)
+
+
+
 
 
 

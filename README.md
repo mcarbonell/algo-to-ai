@@ -41,8 +41,8 @@ El curso se estructura en 8 módulos progresivos. Consulta [SYLLABUS.md](SYLLABU
 | :--- | :--- | :--- | :---: |
 | **00** | [Fundamentos & Pensamiento Tensorial](notebooks/00_foundations/) | Memoria, Strides, Broadcasting, Álgebra Lineal y Grafos Computacionales | ✅ Completado |
 | **01** | [Machine Learning Clásico & Optimización](notebooks/01_classical_ml/) | Optimización continua, Regresiones, GBDT (XGBoost) y Teoría de Generalización | ✅ Completado |
-| **02** | [Deep Learning "From Scratch"](notebooks/02_dl_from_scratch/) | Motor Autograd paso a paso, Backpropagation vectorial, Optimizadores y Normalización | 🚀 Activo |
-| **03** | [Visión y Secuencias](notebooks/03_vision_and_sequences/) | Convolución 2D (`im2col`), ResNets, Autopistas de gradiente, RNNs/LSTMs y sus límites | 📋 Esqueleto |
+| **02** | [Deep Learning "From Scratch"](notebooks/02_dl_from_scratch/) | Motor Autograd paso a paso, Backpropagation vectorial, Optimizadores y Normalización | ✅ Completado |
+| **03** | [Visión y Secuencias](notebooks/03_vision_and_sequences/) | Convolución 2D (`im2col`), ResNets, Autopistas de gradiente, RNNs/LSTMs y sus límites | 🚀 Siguiente |
 | **04** | [La Revolución del Transformer](notebooks/04_transformers/) | Atención por producto escalar, Multi-Head, RoPE, KV-Cache y NanoGPT completo | 📋 Esqueleto |
 | **05** | [Modelos Generativos](notebooks/05_generative_models/) | Espacios latentes, Autoencoders, VAEs y Fundamentos de Difusión (DDPM) | 📋 Esqueleto |
 | **06** | [Post-Training & LLM Engineering](notebooks/06_post_training/) | SFT, Fine-tuning eficiente (LoRA / QLoRA), Alineamiento (DPO) y Razonamiento (CoT) | 📋 Esqueleto |

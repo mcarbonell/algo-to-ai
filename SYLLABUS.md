@@ -12,7 +12,7 @@ Sigue una metodología de **desarrollo en espiral**:
 ## 🗺️ Índice General y Tracker de Progreso
 
 - [x] [Módulo 00: Fundamentos y Pensamiento Tensorial para Algoritmistas](#módulo-00-fundamentos-y-pensamiento-tensorial-para-algoritmistas) `[x]`
-- [ ] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[/]`
+- [x] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[x]`
 - [ ] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[ ]`
 - [ ] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[ ]`
 - [ ] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[ ]`
@@ -56,7 +56,7 @@ Sigue una metodología de **desarrollo en espiral**:
   * `[x]` `01_gradient_descent_and_linear_models.ipynb`: Perceptrón, Descenso de Gradiente, Regresión Lineal y Logística.
   * `[x]` `02_regularization_geometry.ipynb`: Geometría de $L_1$ Lasso vs $L_2$ Ridge & Weight Decay.
   * `[x]` `03_decision_trees_to_xgboost.ipynb`: Árboles y Gradient Boosted Trees (XGBoost from scratch).
-  * `[ ]` `04_generalization_and_evaluation.ipynb`: Sesgo-Varianza, PAC Learning y Métricas.
+  * `[x]` `04_generalization_and_evaluation.ipynb`: Sesgo-Varianza, PAC Learning y Métricas.
 
 * **1. Contexto Histórico:**
   * El Perceptrón de Rosenblatt (1958) y la prueba de Minsky & Papert (1969) sobre la incapacidad de resolver XOR (el primer invierno de la IA).

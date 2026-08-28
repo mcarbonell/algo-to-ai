@@ -285,5 +285,49 @@ def test_xgboost_from_scratch():
     assert mse < 1.0
 
 
+def test_stratified_kfold_and_roc_auc():
+    """Valida la preservación de proporciones de clases en K-Fold y el cálculo de AUC."""
+    # 1. Stratified K-Fold
+    y = np.array([0] * 80 + [1] * 20)  # 20% clase positiva
+    k = 4
+    
+    clases = np.unique(y)
+    folds = [[] for _ in range(k)]
+    for c in clases:
+        idx_c = np.where(y == c)[0]
+        for i, s_idx in enumerate(idx_c):
+            folds[i % k].append(s_idx)
+            
+    # Cada uno de los 4 folds debe tener exactamente 5 muestras de la clase 1 y 20 de la clase 0
+    for f in range(k):
+        val_idx = np.array(folds[f])
+        assert np.sum(y[val_idx] == 1) == 5
+        assert np.sum(y[val_idx] == 0) == 20
+
+    # 2. Curva ROC y AUC con clasificador perfecto
+    y_true = np.array([1, 1, 0, 0])
+    y_score = np.array([0.9, 0.8, 0.2, 0.1])
+    
+    # Clasificador perfecto debe tener AUC = 1.0
+    desc = np.argsort(y_score)[::-1]
+    y_sorted = y_true[desc]
+    n_pos = np.sum(y_true == 1)
+    n_neg = np.sum(y_true == 0)
+    tpr_list, fpr_list = [0.0], [0.0]
+    tp, fp = 0, 0
+    for l in y_sorted:
+        if l == 1:
+            tp += 1
+        else:
+            fp += 1
+        tpr_list.append(tp / n_pos)
+        fpr_list.append(fp / n_neg)
+    
+    fpr_arr, tpr_arr = np.array(fpr_list), np.array(tpr_list)
+    auc = float(np.sum((fpr_arr[1:] - fpr_arr[:-1]) * (tpr_arr[1:] + tpr_arr[:-1]) / 2.0))
+    assert np.isclose(auc, 1.0)
+
+
+
 
 

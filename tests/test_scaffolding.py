@@ -328,6 +328,72 @@ def test_stratified_kfold_and_roc_auc():
     assert np.isclose(auc, 1.0)
 
 
+def test_value_autograd_engine():
+    """Valida el motor de autograd escalar Value con DFS y regla de la cadena multivariable."""
+    import math
+
+    class V:
+        def __init__(self, data, children=()):
+            self.data = float(data)
+            self.grad = 0.0
+            self._prev = set(children)
+            self._backward = lambda: None
+
+        def __add__(self, other):
+            other = other if isinstance(other, V) else V(other)
+            out = V(self.data + other.data, (self, other))
+            def _b():
+                self.grad += 1.0 * out.grad
+                other.grad += 1.0 * out.grad
+            out._backward = _b
+            return out
+
+        def __mul__(self, other):
+            other = other if isinstance(other, V) else V(other)
+            out = V(self.data * other.data, (self, other))
+            def _b():
+                self.grad += other.data * out.grad
+                other.grad += self.data * out.grad
+            out._backward = _b
+            return out
+
+        def relu(self):
+            out = V(max(0.0, self.data), (self,))
+            def _b():
+                self.grad += (1.0 if self.data > 0.0 else 0.0) * out.grad
+            out._backward = _b
+            return out
+
+        def backward(self):
+            topo = []
+            visited = set()
+            def dfs(v):
+                if v not in visited:
+                    visited.add(v)
+                    for c in v._prev:
+                        dfs(c)
+                    topo.append(v)
+            dfs(self)
+            self.grad = 1.0
+            for n in reversed(topo):
+                n._backward()
+
+    # Expresión no lineal: L = relu(x * y) + x
+    # Si x = 2.0, y = 3.0 -> prod = 6.0 > 0 -> relu = 6.0
+    # L = 6.0 + 2.0 = 8.0
+    # dL/dx = y + 1 = 3 + 1 = 4.0
+    # dL/dy = x = 2.0
+    x = V(2.0)
+    y = V(3.0)
+    L = (x * y).relu() + x
+    L.backward()
+
+    assert L.data == 8.0
+    assert x.grad == 4.0
+    assert y.grad == 2.0
+
+
+
 
 
 

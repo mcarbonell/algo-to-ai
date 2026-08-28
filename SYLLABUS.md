@@ -13,7 +13,7 @@ Sigue una metodología de **desarrollo en espiral**:
 
 - [x] [Módulo 00: Fundamentos y Pensamiento Tensorial para Algoritmistas](#módulo-00-fundamentos-y-pensamiento-tensorial-para-algoritmistas) `[x]`
 - [x] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[x]`
-- [ ] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[ ]`
+- [ ] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[/]`
 - [ ] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[ ]`
 - [ ] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[ ]`
 - [ ] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[ ]`
@@ -84,6 +84,12 @@ Sigue una metodología de **desarrollo en espiral**:
 ## Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional
 
 > **Objetivo:** Construir desde cero un motor de diferenciación automática (Autograd), derivar el backpropagation matricial y entender a nivel de física computacional cómo los optimizadores navegan superficies de pérdida complejas.
+
+* **Notebooks del Módulo:**
+  * `[x]` `01_autograd_engine.ipynb`: Construcción de un motor DAG dinámico tipo Micrograd con ordenación topológica y operadores no lineales.
+  * `[ ]` `02_vectorized_mlp_backprop.ipynb`: Red neuronal densa multicapa con propagación vectorial hacia atrás paso a paso.
+  * `[ ]` `03_the_optimizer_zoo.ipynb`: De SGD puro a Momentum, RMSProp, Adam y AdamW (física y dinámica de convergencia).
+  * `[ ]` `04_initialization_and_normalization.ipynb`: Xavier/He initialization, BatchNorm, LayerNorm y RMSNorm.
 
 * **1. Contexto Histórico:**
   * El redescubrimiento de Backpropagation (Rumelhart, Hinton & Williams, 1986).

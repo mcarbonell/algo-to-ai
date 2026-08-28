@@ -716,6 +716,33 @@ def test_ddpm_forward_process_and_cfg():
     assert np.allclose(eps_cfg, [16.0, 17.0])
 
 
+def test_flow_matching_optimal_transport_and_euler():
+    """Valida la interpolacion lineal de Flow Matching y la integracion ODE por Euler."""
+    # 1. Optimal Transport Linear Interpolation
+    x_0 = np.array([[1.0, -3.0]])  # Ruido blanco
+    x_1 = np.array([[5.0, 2.0]])   # Datos
+    t = 0.3
+    
+    # x_t = (1 - t) * x_0 + t * x_1
+    x_t = (1.0 - t) * x_0 + t * x_1
+    expected_xt = np.array([[0.7 * 1.0 + 0.3 * 5.0, 0.7 * (-3.0) + 0.3 * 2.0]])  # [2.2, -1.5]
+    assert np.allclose(x_t, expected_xt)
+    
+    # Velocidad constante verdadera
+    v_true = x_1 - x_0  # [4.0, 5.0]
+    assert np.allclose(v_true, [[4.0, 5.0]])
+    
+    # 2. Integracion ODE exacta por Euler
+    # Si la velocidad es v_true constante, N pasos de Euler deben reconstruir x_1 exactamente:
+    N = 10
+    dt = 1.0 / N
+    curr_x = x_0.copy()
+    for _ in range(N):
+        curr_x = curr_x + dt * v_true
+    assert np.allclose(curr_x, x_1)
+
+
+
 
 
 

@@ -538,6 +538,25 @@ def test_residual_block_gradient_highway():
     assert np.allclose(grad_input, grad_output)
 
 
+def test_lstm_cell_constant_error_carousel():
+    """Valida la autopista de memoria aditiva de la celda LSTM (Constant Error Carousel)."""
+    # Si f_t = 1.0 (recordar todo) e i_t = 0.0 (no escribir nada nuevo)
+    c_prev = np.array([[1.5, -2.0, 3.0]])
+    f_gate = np.array([[1.0, 1.0, 1.0]])
+    i_gate = np.array([[0.0, 0.0, 0.0]])
+    c_tilde = np.array([[0.5, 0.5, 0.5]])
+    o_gate = np.array([[1.0, 1.0, 1.0]])
+    
+    # C_t = f_t * C_{t-1} + i_t * C_tilde
+    c_t = f_gate * c_prev + i_gate * c_tilde
+    assert np.allclose(c_t, c_prev), "La memoria debe mantenerse 100% intacta a traves del tiempo"
+    
+    # h_t = o_t * tanh(C_t)
+    h_t = o_gate * np.tanh(c_t)
+    assert np.allclose(h_t, np.tanh(c_prev))
+
+
+
 
 
 

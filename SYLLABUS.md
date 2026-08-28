@@ -14,7 +14,7 @@ Sigue una metodología de **desarrollo en espiral**:
 - [x] [Módulo 00: Fundamentos y Pensamiento Tensorial para Algoritmistas](#módulo-00-fundamentos-y-pensamiento-tensorial-para-algoritmistas) `[x]`
 - [x] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[x]`
 - [x] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[x]`
-- [ ] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[ ]`
+- [ ] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[/]`
 - [ ] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[ ]`
 - [ ] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[ ]`
 - [ ] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[ ]`
@@ -120,6 +120,11 @@ Sigue una metodología de **desarrollo en espiral**:
 ## Módulo 03: Arquitecturas Especializadas: Visión y Secuencias
 
 > **Objetivo:** Comprender cómo codificar sesgos inductivos (*inductive biases*) en la arquitectura: equivariancia traslacional en imágenes y causalidad temporal en secuencias.
+
+* **Notebooks del Módulo:**
+  * `[x]` `01_convolutions_and_im2col.ipynb`: Convolución 2D matemática vs computacional (`im2col` y GEMM).
+  * `[ ]` `02_resnet_and_gradient_highways.ipynb`: Redes residuales, skip connections y la resolución del gradiente desvaneciente.
+  * `[ ]` `03_rnns_lstms_and_bottlenecks.ipynb`: Modelado secuencial clásico, BPTT y el límite de paralelización en GPUs.
 
 * **1. Contexto Histórico:**
   * Del Neocognitron de Fukushima (1980) y LeNet-5 (1998) al hito que cambió todo: AlexNet (Krizhevsky et al., 2012).

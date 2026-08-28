@@ -480,6 +480,40 @@ def test_initialization_and_normalization():
     assert np.allclose(rms_val, 1.0, atol=1e-3)
 
 
+def test_conv2d_im2col():
+    """Valida la mecánica de desenrollado im2col y la equivalencia matricial GEMM de Conv2D."""
+    # 1. Imagen pequeña de 1 canal y 4x4
+    X = np.array([[[[1.0, 2.0, 0.0, 1.0],
+                    [0.0, 1.0, 2.0, 0.0],
+                    [3.0, 0.0, 1.0, 2.0],
+                    [1.0, 2.0, 0.0, 1.0]]]])  # (1, 1, 4, 4)
+    # Filtro 2x2
+    W = np.array([[[[1.0, 0.0],
+                    [0.0, 1.0]]]])  # (1, 1, 2, 2)
+    
+    # Con stride=1 y padding=0, out_h = 4 - 2 + 1 = 3, out_w = 3
+    # Valor en (0, 0) debe ser 1*1 + 2*0 + 0*0 + 1*1 = 2.0
+    kh, kw = 2, 2
+    out_h, out_w = 3, 3
+    
+    # im2col manual
+    cols = np.zeros((1 * kh * kw, 1 * out_h * out_w))
+    col_idx = 0
+    for h in range(out_h):
+        for w in range(out_w):
+            patch = X[0, 0, h:h+kh, w:w+kw]
+            cols[:, col_idx] = patch.ravel()
+            col_idx += 1
+            
+    out_gemm = (W.reshape(1, -1) @ cols).reshape(1, 1, out_h, out_w)
+    
+    # Comprobar la primera ventana (0, 0): X[0:2, 0:2] = [[1, 2], [0, 1]] * [[1, 0], [0, 1]] = 1 + 1 = 2.0
+    assert out_gemm[0, 0, 0, 0] == 2.0
+    # Comprobar la ventana (0, 1): X[0:2, 1:3] = [[2, 0], [1, 2]] * [[1, 0], [0, 1]] = 2 + 2 = 4.0
+    assert out_gemm[0, 0, 0, 1] == 4.0
+
+
+
 
 
 

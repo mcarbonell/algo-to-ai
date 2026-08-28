@@ -235,4 +235,55 @@ def test_ridge_and_lasso_regularization():
     assert w_lasso[1] < 0
 
 
+def test_xgboost_from_scratch():
+    """Valida la fórmula de pesos y ganancia de división de Tianqi Chen (XGBoost)."""
+    # 1. Validación de la fórmula de peso óptimo de hoja w* = -G / (H + lambda)
+    g = np.array([-2.0, -3.0, -1.0])
+    h = np.array([1.0, 1.0, 1.0])
+    reg_lambda = 1.0
+    G = np.sum(g)  # -6.0
+    H = np.sum(h)  # 3.0
+    w_star = - G / (H + reg_lambda)
+    assert np.isclose(w_star, 1.5)  # -(-6) / (3 + 1) = 6 / 4 = 1.5
+
+    # 2. Validación de fórmula de ganancia de división
+    # Nodo padre
+    gain_parent = (G ** 2) / (H + reg_lambda)
+    # Split izquierdo: 2 muestras (-2, -3) -> G_L = -5, H_L = 2
+    G_L, H_L = -5.0, 2.0
+    gain_L = (G_L ** 2) / (H_L + reg_lambda)
+    # Split derecho: 1 muestra (-1) -> G_R = -1, H_R = 1
+    G_R, H_R = -1.0, 1.0
+    gain_R = (G_R ** 2) / (H_R + reg_lambda)
+
+    split_gain = 0.5 * (gain_L + gain_R - gain_parent)
+    # gain_parent = 36 / 4 = 9.0
+    # gain_L = 25 / 3 = 8.333
+    # gain_R = 1 / 2 = 0.5
+    # split_gain = 0.5 * (8.3333 + 0.5 - 9.0) = 0.5 * (-0.1666) < 0 (no vale la pena dividir)
+    assert split_gain < 0
+
+    # 3. Mini ensemble ajustando un escalón
+    X = np.array([[0.0], [1.0], [2.0], [10.0], [11.0], [12.0]])
+    y = np.array([0.0, 0.0, 0.0, 10.0, 10.0, 10.0])
+    
+    # Modelo simple boosting
+    y_pred = np.full(len(y), np.mean(y))  # 5.0
+    for _ in range(5):
+        g = y_pred - y
+        h = np.ones(len(y))
+        # Mejor corte en x = 5.0
+        mask_left = X[:, 0] <= 5.0
+        mask_right = ~mask_left
+        w_L = - np.sum(g[mask_left]) / (np.sum(h[mask_left]) + 0.1)
+        w_R = - np.sum(g[mask_right]) / (np.sum(h[mask_right]) + 0.1)
+        y_pred[mask_left] += 0.5 * w_L
+        y_pred[mask_right] += 0.5 * w_R
+
+    # Tras 5 pasos el error cuadrático debe haber colapsado
+    mse = np.mean((y_pred - y) ** 2)
+    assert mse < 1.0
+
+
+
 

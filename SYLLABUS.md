@@ -55,7 +55,7 @@ Sigue una metodología de **desarrollo en espiral**:
 * **Notebooks del Módulo:**
   * `[x]` `01_gradient_descent_and_linear_models.ipynb`: Perceptrón, Descenso de Gradiente, Regresión Lineal y Logística.
   * `[x]` `02_regularization_geometry.ipynb`: Geometría de $L_1$ Lasso vs $L_2$ Ridge & Weight Decay.
-  * `[ ]` `03_decision_trees_to_xgboost.ipynb`: Árboles y Gradient Boosted Trees (XGBoost from scratch).
+  * `[x]` `03_decision_trees_to_xgboost.ipynb`: Árboles y Gradient Boosted Trees (XGBoost from scratch).
   * `[ ]` `04_generalization_and_evaluation.ipynb`: Sesgo-Varianza, PAC Learning y Métricas.
 
 * **1. Contexto Histórico:**

@@ -781,6 +781,42 @@ def test_sft_loss_masking():
     assert np.all(grad_mock[~valid_mask] == 0.0)
 
 
+def test_lora_initialization_and_merging():
+    """Valida la formulacion de bajo rango LoRA y la equivalencia de fusion de pesos."""
+    in_dim = 16
+    out_dim = 32
+    r = 4
+    alpha = 8.0
+    scaling = alpha / r
+    
+    W_0 = np.random.randn(out_dim, in_dim) * 0.02
+    x = np.random.randn(2, in_dim)
+    
+    # 1. En paso 0: A ~ N(0, 1), B = 0 -> Delta W = 0
+    A = np.random.randn(r, in_dim) / np.sqrt(r)
+    B_init = np.zeros((out_dim, r))
+    
+    base_out = x @ W_0.T
+    lora_init_out = base_out + ((x @ A.T) @ B_init.T) * scaling
+    assert np.allclose(base_out, lora_init_out)
+    
+    # 2. Tras entrenamiento: B != 0
+    B_trained = np.random.randn(out_dim, r) * 0.1
+    dynamic_out = base_out + ((x @ A.T) @ B_trained.T) * scaling
+    
+    # 3. Fusion de pesos: W_final = W_0 + (alpha / r) * (B @ A)
+    delta_W = (B_trained @ A) * scaling
+    W_final = W_0 + delta_W
+    merged_out = x @ W_final.T
+    
+    assert np.allclose(dynamic_out, merged_out, atol=1e-6)
+    
+    # 4. Rango de delta_W es como maximo r
+    rank_delta = np.linalg.matrix_rank(delta_W)
+    assert rank_delta <= r
+
+
+
 
 
 

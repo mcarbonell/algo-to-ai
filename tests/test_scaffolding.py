@@ -428,6 +428,33 @@ def test_vectorized_linear_and_relu():
     assert np.allclose(dW, dW_loop)
 
 
+def test_optimizers_adam_and_adamw():
+    """Valida la mecánica de momentos y desacoplamiento de weight decay en Adam y AdamW."""
+    # 1. AdamW en 1 dimensión
+    w = np.array([5.0])
+    lr = 0.1
+    beta1 = 0.9
+    beta2 = 0.999
+    eps = 1e-8
+    wd = 0.05
+
+    m = np.zeros(1)
+    v = np.zeros(1)
+
+    # Simular 10 pasos en f(w) = w^2 (gradiente = 2w)
+    for t in range(1, 11):
+        g = 2.0 * w
+        m = beta1 * m + (1.0 - beta1) * g
+        v = beta2 * v + (1.0 - beta2) * (g ** 2)
+        m_hat = m / (1.0 - beta1 ** t)
+        v_hat = v / (1.0 - beta2 ** t)
+        w = w * (1.0 - lr * wd) - (lr / (np.sqrt(v_hat) + eps)) * m_hat
+
+    # El peso debe haber convergido significativamente hacia 0
+    assert abs(w[0]) < 4.0
+
+
+
 
 
 

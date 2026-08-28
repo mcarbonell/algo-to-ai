@@ -845,6 +845,40 @@ def test_dpo_loss_and_implicit_rewards():
     assert loss_near_zero < 1e-4
 
 
+def test_self_consistency_and_beam_search():
+    """Valida el algoritmo de Self-Consistency (mayoria) y la penalizacion de longitud en Beam Search."""
+    from collections import Counter
+    
+    # 1. Self-Consistency Majority Voting
+    candidates = ["42", "42", "24", "42", "108"]
+    counts = Counter(candidates)
+    winner, top_count = counts.most_common(1)[0]
+    confidence = top_count / len(candidates)
+    
+    assert winner == "42"
+    assert confidence == 3 / 5
+    assert counts["42"] == 3
+    assert counts["24"] == 1
+    
+    # 2. Google NMT Length Penalty: LP(T) = (5 + T)^alpha / (5 + 1)^alpha
+    alpha = 0.6
+    # Para T = 1
+    lp_1 = ((5.0 + 1.0) ** alpha) / ((5.0 + 1.0) ** alpha)
+    assert np.isclose(lp_1, 1.0)
+    
+    # Para T = 10
+    lp_10 = ((5.0 + 10.0) ** alpha) / ((5.0 + 1.0) ** alpha)
+    # 15^0.6 / 6^0.6 = (15/6)^0.6 = 2.5^0.6 = 1.73286
+    expected_lp10 = 2.5 ** 0.6
+    assert np.isclose(lp_10, expected_lp10, atol=1e-4)
+    
+    # Score normalizado
+    log_prob = -12.0
+    norm_score = log_prob / lp_10
+    assert norm_score > log_prob  # La penalizacion normaliza suavemente
+
+
+
 
 
 

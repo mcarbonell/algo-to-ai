@@ -816,6 +816,36 @@ def test_lora_initialization_and_merging():
     assert rank_delta <= r
 
 
+def test_dpo_loss_and_implicit_rewards():
+    """Valida la formulacion analitica de DPO y la derivacion de recompensas implicitas."""
+    # Log-probabilidades de prueba
+    pi_w, pi_l = -4.0, -9.0
+    ref_w, ref_l = -6.0, -6.0
+    beta = 0.2
+    
+    # 1. Recompensas implicitas: r(x, y) = beta * (log pi - log ref)
+    r_w = beta * (pi_w - ref_w)  # 0.2 * (-4 - (-6)) = 0.4
+    r_l = beta * (pi_l - ref_l)  # 0.2 * (-9 - (-6)) = -0.6
+    assert np.isclose(r_w, 0.4)
+    assert np.isclose(r_l, -0.6)
+    
+    # 2. Margen de preferencia: Delta r = r_w - r_l
+    margin = r_w - r_l  # 0.4 - (-0.6) = 1.0
+    assert np.isclose(margin, 1.0)
+    
+    # 3. Perdida DPO: -log(sigmoid(margin)) = log(1 + exp(-margin))
+    loss_manual = np.log(1.0 + np.exp(-margin))
+    # Para margin = 1.0: log(1 + exp(-1)) = log(1 + 0.367879) = log(1.367879) = 0.313261687
+    expected = float(np.log(1.0 + np.exp(-1.0)))
+    assert np.isclose(loss_manual, expected, atol=1e-5)
+    
+    # 4. Si la politica ya prefiere fuertemente a 'w' (margin >> 0), la perdida converge a 0
+    margin_large = 10.0
+    loss_near_zero = np.log(1.0 + np.exp(-margin_large))
+    assert loss_near_zero < 1e-4
+
+
+
 
 
 

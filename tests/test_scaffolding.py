@@ -162,3 +162,34 @@ def test_dagnode_reverse_autograd():
     assert a.grad == 5.0  # b (4) + 1
     assert b.grad == 3.0  # a (3)
 
+
+def test_linear_and_logistic_regression():
+    """Valida la convergencia matemática de las regresiones from-scratch."""
+    # 1. Regresión lineal simple
+    X = np.array([[1.0], [2.0], [3.0], [4.0]])
+    y = 2.0 * X[:, 0] + 1.0  # y = 2x + 1
+    
+    # Ecuación normal
+    X_aug = np.hstack([np.ones((4, 1)), X])
+    w = np.linalg.solve(X_aug.T @ X_aug, X_aug.T @ y)
+    assert np.isclose(w[0], 1.0)  # bias
+    assert np.isclose(w[1], 2.0)  # slope
+
+    # 2. Regresión logística separable
+    X_log = np.array([[-2.0], [-1.0], [1.0], [2.0]])
+    y_log = np.array([0.0, 0.0, 1.0, 1.0])
+    
+    weights = np.array([0.0])
+    bias = 0.0
+    lr = 0.5
+    for _ in range(300):
+        z = X_log @ weights + bias
+        y_hat = 1.0 / (1.0 + np.exp(-z))
+        err = y_hat - y_log
+        weights -= lr * (1.0 / len(y_log)) * (X_log.T @ err)
+        bias -= lr * np.mean(err)
+        
+    preds = (1.0 / (1.0 + np.exp(-(X_log @ weights + bias))) >= 0.5).astype(float)
+    assert np.array_equal(preds, y_log)
+
+

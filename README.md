@@ -39,8 +39,8 @@ El curso se estructura en 8 módulos progresivos. Consulta [SYLLABUS.md](SYLLABU
 
 | Módulo | Título | Enfoque Principal | Estado |
 | :--- | :--- | :--- | :---: |
-| **00** | [Fundamentos & Pensamiento Tensorial](notebooks/00_foundations/) | Memoria, Strides, Broadcasting, Álgebra Lineal y Grafos Computacionales | 🚀 Activo |
-| **01** | [Machine Learning Clásico & Optimización](notebooks/01_classical_ml/) | Optimización continua, Regresiones, GBDT (XGBoost) y Teoría de Generalización | 📋 Esqueleto |
+| **00** | [Fundamentos & Pensamiento Tensorial](notebooks/00_foundations/) | Memoria, Strides, Broadcasting, Álgebra Lineal y Grafos Computacionales | ✅ Completado |
+| **01** | [Machine Learning Clásico & Optimización](notebooks/01_classical_ml/) | Optimización continua, Regresiones, GBDT (XGBoost) y Teoría de Generalización | 🚀 Activo |
 | **02** | [Deep Learning "From Scratch"](notebooks/02_dl_from_scratch/) | Motor Autograd paso a paso, Backpropagation vectorial, Optimizadores y Normalización | 📋 Esqueleto |
 | **03** | [Visión y Secuencias](notebooks/03_vision_and_sequences/) | Convolución 2D (`im2col`), ResNets, Autopistas de gradiente, RNNs/LSTMs y sus límites | 📋 Esqueleto |
 | **04** | [La Revolución del Transformer](notebooks/04_transformers/) | Atención por producto escalar, Multi-Head, RoPE, KV-Cache y NanoGPT completo | 📋 Esqueleto |

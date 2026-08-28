@@ -393,6 +393,42 @@ def test_value_autograd_engine():
     assert y.grad == 2.0
 
 
+def test_vectorized_linear_and_relu():
+    """Valida la matemática y correspondencia dimensional de backpropagation matricial."""
+    B, d_in, d_out = 4, 3, 2
+    np.random.seed(42)
+    X = np.random.randn(B, d_in)
+    W = np.random.randn(d_in, d_out)
+    b = np.zeros((1, d_out))
+
+    # Forward
+    Z = X @ W + b
+    A = np.maximum(0.0, Z)
+
+    # Simular gradiente entrante delta: (B, d_out)
+    delta = np.random.randn(B, d_out)
+
+    # Backward ReLU
+    delta_Z = delta * (Z > 0.0)
+
+    # Backward Linear
+    dW = X.T @ delta_Z
+    db = np.sum(delta_Z, axis=0, keepdims=True)
+    dX = delta_Z @ W.T
+
+    # Comprobar consistencia dimensional
+    assert dW.shape == (d_in, d_out)
+    assert db.shape == (1, d_out)
+    assert dX.shape == (B, d_in)
+
+    # Comprobación numérica: dW debe ser la suma de X[i].T @ delta_Z[i] muestra a muestra
+    dW_loop = np.zeros_like(W)
+    for i in range(B):
+        dW_loop += np.outer(X[i], delta_Z[i])
+    assert np.allclose(dW, dW_loop)
+
+
+
 
 
 

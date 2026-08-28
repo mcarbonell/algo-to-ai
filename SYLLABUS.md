@@ -15,7 +15,7 @@ Sigue una metodología de **desarrollo en espiral**:
 - [x] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[x]`
 - [x] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[x]`
 - [x] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[x]`
-- [ ] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[/]`
+- [x] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[x]`
 - [ ] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[ ]`
 - [ ] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[ ]`
 - [ ] [Módulo 07: Sistemas, Inferencia Eficiente y Cuantización](#módulo-07-sistemas-inferencia-eficiente-y-cuantización) `[ ]`
@@ -156,7 +156,7 @@ Sigue una metodología de **desarrollo en espiral**:
 * **Notebooks del Módulo:**
   * `[x]` `01_attention_mechanics.ipynb`: Scaled Dot-Product y Multi-Head Attention from scratch con visualizaciones de similitud.
   * `[x]` `02_positional_encodings_rope.ipynb`: De embeddings sinusoidales a Rotary Position Embedding (RoPE) en el plano complejo.
-  * `[ ]` `03_nanogpt_from_scratch.ipynb`: Construcción integral de un LLM tipo GPT/LLaMA con tokenizador BPE y KV-Cache para generación rápida.
+  * `[x]` `03_nanogpt_from_scratch.ipynb`: Construcción integral de un LLM tipo GPT/LLaMA con tokenizador BPE y KV-Cache para generación rápida.
 
 * **1. Contexto Histórico:**
   * El cuello de botella del vector de contexto fijo en Seq2Seq (Sutskever et al., 2014).

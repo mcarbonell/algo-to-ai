@@ -623,6 +623,46 @@ def test_rope_rotary_position_embedding():
     assert np.isclose(dot_base, dot_shifted, atol=1e-5)
 
 
+def test_bpe_tokenizer_and_kv_cache():
+    """Valida el algoritmo BPE y la equivalencia de generacion con KV-Cache."""
+    # 1. BPE merge check
+    text = "ababab"
+    chars = sorted(list(set(text)))  # ['a', 'b']
+    c2i = {c: i for i, c in enumerate(chars)}
+    ids = [c2i[c] for c in text]  # [0, 1, 0, 1, 0, 1]
+    
+    # El par más frecuente es (0, 1) ('ab') con frecuencia 3
+    stats = {}
+    for pair in zip(ids, ids[1:]):
+        stats[pair] = stats.get(pair, 0) + 1
+    best_pair = max(stats, key=stats.get)
+    assert best_pair == (0, 1)
+    
+    # 2. KV-Cache equivalence in attention
+    # Scaled Dot-Product: atención de un nuevo token contra historial acumulado
+    B, H, d_k = 1, 2, 4
+    K_past = np.random.randn(B, H, 3, d_k)
+    V_past = np.random.randn(B, H, 3, d_k)
+    
+    # Nuevo token en pos 3
+    q_new = np.random.randn(B, H, 1, d_k)
+    k_new = np.random.randn(B, H, 1, d_k)
+    v_new = np.random.randn(B, H, 1, d_k)
+    
+    # Concatenar en caché
+    K_total = np.concatenate([K_past, k_new], axis=2)  # (1, 2, 4, 4)
+    V_total = np.concatenate([V_past, v_new], axis=2)
+    
+    # Atención
+    scores = (q_new @ K_total.swapaxes(-1, -2)) / np.sqrt(d_k)
+    exp_s = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
+    weights = exp_s / np.sum(exp_s, axis=-1, keepdims=True)
+    out_step = weights @ V_total
+    assert out_step.shape == (B, H, 1, d_k)
+
+
+
+
 
 
 

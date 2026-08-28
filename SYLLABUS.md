@@ -11,7 +11,7 @@ Sigue una metodología de **desarrollo en espiral**:
 
 ## 🗺️ Índice General y Tracker de Progreso
 
-- [ ] [Módulo 00: Fundamentos y Pensamiento Tensorial para Algoritmistas](#módulo-00-fundamentos-y-pensamiento-tensorial-para-algoritmistas) `[/]`
+- [x] [Módulo 00: Fundamentos y Pensamiento Tensorial para Algoritmistas](#módulo-00-fundamentos-y-pensamiento-tensorial-para-algoritmistas) `[x]`
 - [ ] [Módulo 01: Machine Learning Estadístico & Optimización Convexa](#módulo-01-machine-learning-estadístico--optimización-convexa) `[ ]`
 - [ ] [Módulo 02: Deep Learning "From Scratch" & El Grafo Computacional](#módulo-02-deep-learning-from-scratch--el-grafo-computacional) `[ ]`
 - [ ] [Módulo 03: Arquitecturas Especializadas: Visión y Secuencias](#módulo-03-arquitecturas-especializadas-visión-y-secuencias) `[ ]`

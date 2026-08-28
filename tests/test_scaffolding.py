@@ -107,3 +107,58 @@ def test_minitensor_logic():
     assert broad[0, 3] == 100
     assert broad[1, 0] == 200
     assert broad[1, 3] == 200
+
+
+def test_dagnode_reverse_autograd():
+    """Valida la acumulación de gradientes en reversa sobre un DAG."""
+    class Node:
+        def __init__(self, val, children=()):
+            self.val = float(val)
+            self.grad = 0.0
+            self.children = set(children)
+            self._backward = lambda: None
+
+        def __add__(self, other):
+            other = other if isinstance(other, Node) else Node(other)
+            out = Node(self.val + other.val, (self, other))
+            def _b():
+                self.grad += 1.0 * out.grad
+                other.grad += 1.0 * out.grad
+            out._backward = _b
+            return out
+
+        def __mul__(self, other):
+            other = other if isinstance(other, Node) else Node(other)
+            out = Node(self.val * other.val, (self, other))
+            def _b():
+                self.grad += other.val * out.grad
+                other.grad += self.val * out.grad
+            out._backward = _b
+            return out
+
+        def backward(self):
+            topo = []
+            visited = set()
+            def dfs(v):
+                if v not in visited:
+                    visited.add(v)
+                    for c in v.children:
+                        dfs(c)
+                    topo.append(v)
+            dfs(self)
+            self.grad = 1.0
+            for n in reversed(topo):
+                n._backward()
+
+    # L = (a * b) + a
+    # dL/da = b + 1, dL/db = a
+    a = Node(3.0)
+    b = Node(4.0)
+    prod = a * b
+    L = prod + a
+    L.backward()
+
+    assert L.val == 15.0
+    assert a.grad == 5.0  # b (4) + 1
+    assert b.grad == 3.0  # a (3)
+

@@ -999,6 +999,39 @@ def test_online_softmax_and_flash_attention_tiling():
     assert not np.isnan(out_std).any()
 
 
+def test_gguf_alignment_and_operator_fusion():
+    """Valida la logica de alineacion binaria de GGUF a 32 bytes y el ahorro de trafico en fusion de operadores."""
+    import struct
+    
+    # 1. Alineacion binaria GGUF a 32 bytes
+    magic = b"GGUF"
+    assert magic == b"GGUF"
+    assert struct.unpack("<I", magic)[0] == 0x46554747  # Little-endian 'GGUF'
+    
+    alignment = 32
+    # Caso 1: Cabecera ocupa 115 bytes -> offset debe ser 128
+    header_size_1 = 115
+    offset_1 = ((header_size_1 + alignment - 1) // alignment) * alignment
+    assert offset_1 == 128
+    assert offset_1 % alignment == 0
+    
+    # Caso 2: Cabecera ya mide exactamente 64 bytes -> offset es 64
+    header_size_2 = 64
+    offset_2 = ((header_size_2 + alignment - 1) // alignment) * alignment
+    assert offset_2 == 64
+    
+    # 2. Ahorro de memoria en fusion de operadores (MatMul + BiasAdd -> Gemm)
+    N, D = 128, 4096
+    # Sin fusion: MatMul escribe Y_tmp y Add lee Y_tmp (4*N*D + D*D + D elementos)
+    unfused_elements = 4 * N * D + D * D + D
+    # Con fusion: Lee X, W, B y escribe directo Y_out (2*N*D + D*D + D elementos)
+    fused_elements = 2 * N * D + D * D + D
+    
+    saved_elements = unfused_elements - fused_elements
+    assert saved_elements == 2 * N * D  # Exactamente 2 transferencias completas del tensor temporal
+
+
+
 
 
 

@@ -878,6 +878,41 @@ def test_self_consistency_and_beam_search():
     assert norm_score > log_prob  # La penalizacion normaliza suavemente
 
 
+def test_roofline_and_inference_bandwidth():
+    """Valida el modelo Roofline, tokens/segundo en decode y calculo de memoria de KV-Cache."""
+    # 1. Modelo Roofline: P = min(Peak FLOPS, I * Peak Bandwidth)
+    peak_flops = 100e12       # 100 TFLOPS
+    peak_bandwidth = 1000e9   # 1000 GB/s
+    ridge_point = peak_flops / peak_bandwidth  # 100 FLOPs/Byte
+    
+    # Caso Memory-Bound: I = 2.0 FLOPs/Byte
+    I_mem = 2.0
+    p_mem = min(peak_flops, I_mem * peak_bandwidth)
+    assert p_mem == 2.0 * 1000e9  # 2 TFLOPS (2% de utilizacion)
+    
+    # Caso Compute-Bound: I = 200.0 FLOPs/Byte
+    I_comp = 200.0
+    p_comp = min(peak_flops, I_comp * peak_bandwidth)
+    assert p_comp == peak_flops  # 100 TFLOPS (100% saturacion)
+    
+    # 2. Tokens / segundo en Decode: BW / (Params * Bytes)
+    params = 7e9
+    bytes_per_param = 2.0  # FP16 -> 14 GB
+    bw_gbps = 280.0
+    tok_s = (bw_gbps * 1e9) / (params * bytes_per_param)  # 280e9 / 14e9 = 20 tokens/s
+    assert np.isclose(tok_s, 20.0)
+    
+    # 3. KV-Cache Memory formula: 2 * layers * heads * head_dim * seq_len * batch * precision
+    n_layers, n_heads, head_dim = 32, 32, 128
+    seq_len, batch_size = 2048, 1
+    precision_bytes = 2.0
+    
+    kv_bytes = 2 * n_layers * n_heads * head_dim * seq_len * batch_size * precision_bytes
+    # 2 * 32 * 32 * 128 * 2048 * 1 * 2 = 1,073,741,824 bytes = 1.0 GiB exacto
+    assert kv_bytes == 1024 ** 3
+
+
+
 
 
 

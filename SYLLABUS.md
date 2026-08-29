@@ -18,7 +18,7 @@ Sigue una metodología de **desarrollo en espiral**:
 - [x] [Módulo 04: La Revolución del Transformer y la Atención](#módulo-04-la-revolución-del-transformer-y-la-atención) `[x]`
 - [x] [Módulo 05: Modelos Generativos y Espacios Latentes](#módulo-05-modelos-generativos-y-espacios-latentes) `[x]`
 - [x] [Módulo 06: Post-Training, Fine-Tuning y el Arte del LLM](#módulo-06-post-training-fine-tuning-y-el-arte-del-llm) `[x]`
-- [ ] [Módulo 07: Sistemas, Inferencia Eficiente y Cuantización](#módulo-07-sistemas-inferencia-eficiente-y-cuantización) `[ ]`
+- [ ] [Módulo 07: Sistemas, Inferencia Eficiente y Cuantización](#módulo-07-sistemas-inferencia-eficiente-y-cuantización) `[/]`
 
 ---
 
@@ -255,6 +255,12 @@ Sigue una metodología de **desarrollo en espiral**:
 ## Módulo 07: Sistemas, Inferencia Eficiente y Cuantización
 
 > **Objetivo:** Cerrar la brecha entre el modelo teórico y la realidad del silicio: entender el muro de la memoria (*memory wall*), la aritmética de baja precisión y cómo ejecutar modelos modernos con latencia mínima en hardware accesible.
+
+* **Notebooks del Módulo:**
+  * `[x]` `01_memory_wall_and_roofline.ipynb`: El modelo Roofline, prefill (compute-bound) vs decode (memory-bound).
+  * `[ ]` `02_quantization_from_scratch.ipynb`: Cuantización simétrica y asimétrica INT8 / INT4, calibración y AWQ.
+  * `[ ]` `03_hardware_aware_attention.ipynb`: FlashAttention: conceptos de SRAM vs HBM y tiling en bloques.
+  * `[ ]` `04_local_inference_and_onnx.ipynb`: Exportación a ONNX Runtime, GGUF/llama.cpp e inferencia local eficiente en CPU/GPU integrada.
 
 * **1. Contexto Histórico:**
   * La Ley de Moore para transistores vs la Ley de amortización del ancho de banda de memoria (HBM/DRAM).

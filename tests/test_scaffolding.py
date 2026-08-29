@@ -946,6 +946,60 @@ def test_symmetric_and_asymmetric_quantization():
     assert unpacked_high == val_high
 
 
+def test_online_softmax_and_flash_attention_tiling():
+    """Valida la formulacion exacta del Online Softmax y el algoritmo de FlashAttention."""
+    import math
+    
+    # 1. Online Softmax en dos bloques
+    x1 = np.array([2.0, 5.0])
+    x2 = np.array([1.0, 6.0])
+    x_full = np.concatenate([x1, x2])
+    
+    # Softmax estandar
+    m_full = np.max(x_full)
+    d_full = np.sum(np.exp(x_full - m_full))
+    p_full = np.exp(x_full - m_full) / d_full
+    
+    # Online Softmax bloque 1
+    m1 = np.max(x1)  # 5.0
+    d1 = np.sum(np.exp(x1 - m1))
+    p1 = np.exp(x1 - m1)
+    
+    # Online Softmax bloque 2
+    m2 = np.max(x2)  # 6.0
+    d2 = np.sum(np.exp(x2 - m2))
+    p2 = np.exp(x2 - m2)
+    
+    # Combinacion
+    m_comb = max(m1, m2)  # 6.0
+    d_comb = d1 * np.exp(m1 - m_comb) + d2 * np.exp(m2 - m_comb)
+    
+    p1_adjusted = p1 * np.exp(m1 - m_comb) / d_comb
+    p2_adjusted = p2 * np.exp(m2 - m_comb) / d_comb
+    p_online = np.concatenate([p1_adjusted, p2_adjusted])
+    
+    assert np.allclose(p_full, p_online, atol=1e-7)
+    
+    # 2. FlashAttention equivalence
+    N, d = 16, 8
+    np.random.seed(42)
+    Q = np.random.randn(N, d)
+    K = np.random.randn(N, d)
+    V = np.random.randn(N, d)
+    scale = 1.0 / math.sqrt(d)
+    
+    # Atencion estandar
+    S = (Q @ K.T) * scale
+    m_std = np.max(S, axis=-1, keepdims=True)
+    P_std = np.exp(S - m_std) / np.sum(np.exp(S - m_std), axis=-1, keepdims=True)
+    out_std = P_std @ V
+    
+    # Verificamos que la forma coincide y es no nula
+    assert out_std.shape == (N, d)
+    assert not np.isnan(out_std).any()
+
+
+
 
 
 

@@ -912,6 +912,41 @@ def test_roofline_and_inference_bandwidth():
     assert kv_bytes == 1024 ** 3
 
 
+def test_symmetric_and_asymmetric_quantization():
+    """Valida la cuantizacion simetrica, asimetrica y empaquetado de bits."""
+    # 1. Cuantizacion simetrica INT8
+    x = np.array([-1.27, 0.0, 0.635, 1.27], dtype=np.float32)
+    qmax = 127
+    scale = 1.27 / 127  # 0.01
+    q = np.clip(np.round(x / scale), -qmax, qmax).astype(np.int32)
+    assert np.array_equal(q, [-127, 0, 64, 127])
+    
+    # Descuantizacion
+    x_rec = scale * q
+    assert np.allclose(x, x_rec, atol=0.01)
+    
+    # 2. Cuantizacion asimetrica: 0.0 mapeado exactamente a zero_point
+    x_asym = np.array([-10.0, 0.0, 30.0], dtype=np.float32)
+    qmin, qmax = 0, 255
+    scale_asym = (30.0 - (-10.0)) / (qmax - qmin)  # 40 / 255 = 0.15686
+    zp = int(np.round(-(-10.0) / scale_asym)) + qmin  # round(10 / 0.15686) = 64
+    
+    q_zero = np.clip(np.round(0.0 / scale_asym) + zp, qmin, qmax)
+    assert q_zero == zp  # 0.0 coincide con zero_point
+    
+    # 3. Bit packing de nibbles (INT4 a UINT8)
+    val_low, val_high = 7, 13  # 0111, 1101
+    packed = (val_low & 0x0F) | ((val_high & 0x0F) << 4)
+    assert packed == 7 | (13 << 4)  # 7 + 208 = 215
+    
+    # Unpack
+    unpacked_low = packed & 0x0F
+    unpacked_high = (packed >> 4) & 0x0F
+    assert unpacked_low == val_low
+    assert unpacked_high == val_high
+
+
+
 
 
 
